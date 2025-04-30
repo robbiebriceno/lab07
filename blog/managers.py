@@ -14,7 +14,7 @@ class PostManager(models.Manager):
         )
     
     def drafts(self):
-        """Return only draft posts"""
+        """Return only draft posts232323"""
         return self.filter(status='draft')
     
     def by_category(self, category_slug):
