@@ -114,3 +114,30 @@ class Comment(models.Model):
     # Managers
     objects = models.Manager()  # Default manager
     blog_objects = CommentManager()  # Custom manager
+
+
+# Example model for user profiles
+class Profile(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='profile')
+    bio = models.TextField(blank=True)
+    avatar = models.ImageField(upload_to='avatars/', blank=True)
+    website = models.URLField(blank=True)
+    follows = models.ManyToManyField('self', symmetrical=False, related_name='followed_by', blank=True)
+    bookmarks = models.ManyToManyField(Post, related_name='bookmarked_by', blank=True)
+
+# Example models for analytics
+class PostView(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='views')
+    ip_address = models.GenericIPAddressField()
+    user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    referrer = models.URLField(blank=True, null=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+# Example model for post revisions
+class PostRevision(models.Model):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='revisions')
+    title = models.CharField(max_length=200)
+    content = models.TextField()
+    created_by = models.ForeignKey(User, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(auto_now_add=True)
+    revision_notes = models.TextField(blank=True)
